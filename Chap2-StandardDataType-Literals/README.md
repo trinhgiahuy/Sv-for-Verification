@@ -77,4 +77,72 @@ always @(sel2,c,d)		// NORMAL, but the variable can synthesize as combinational 
   op = c;
  else
   op = d;
-```  
+``` 
+
+## 2-State Data Types
+
+All Verilog data type are four state logic except real and realtime
+
+|Type		| Descriptio											| Sign(Default)|
+|---------------|-----------------------------------------------------------------------------------------------|--------------|
+|bit		| Single bit,scalable to vector									| Unsigned     |
+|byte		| 8-bit vector or ASCII character								| Signed       |
+|shortint	| 16-bit vector											| Signed       |
+|int		| 32-bit vector											| Signed       |
+|longint	| 64-bit vector											| Signed       |
+
+- Based on bit, value of 0 & 1 only
+- Direct replacemnets for reg, logic or integer
+- Greater effciency at higher-abstraction-level modeling (RTL)
+
+## Unsized Literal
+
+```
+// Verilog
+logic [5:0] databus;
+
+databus = 6'b0;		//000000
+databus = 6'b1;		//000001
+databus = 6'bz;		//zzzzzz
+databus = 4'bx;		//00xxxx
+
+
+//-----------------
+//SystemVerilog
+logic [5:0] databus;
+
+databus = '0;		//000000
+databus = '1;		//111111
+databus = 'z;		//zzzzzz
+databus = 'x;		//xxxxxx
+```
+
+## Time Literals
+SV provide time literal construct that
+- Explicitly specifies time value
+- Allows more control over time literal
+Format:
+- Integer or fixed-point value
+- Immediately followed by time units without space between them (fs ps ns us s)
+- Scaled to current precision
+- **1step** delay value: one simulation precision unit
+
+```
+// #1step advance simulation 100ps in this example
+
+`timescale 1ns/100ps			// time unit 1ns , precision 100ps
+module testmodule
+ logic avar, sel, bvar, cvar, clk;
+
+ initial
+ begin
+  #20ns sel =  0;
+  #5.18ns sel = 1;		// here rounded to 5.2ns
+  bvar = #1step cvar		// blocking assigin using 1step
+ end
+ 
+always @(posedge clk)
+ #5.1ns avar <= avar + 1;     // Non-blocking assign
+
+endmodule
+```
