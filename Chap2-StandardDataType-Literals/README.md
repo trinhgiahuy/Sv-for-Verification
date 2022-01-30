@@ -164,3 +164,16 @@ module testbench
  end
 endmodule
 ```
+
+## CHAP SUMMARY
+1. Whih data type can be used for majority of SV var?
+- logic
+2. Which situation we need to use net?
+- When there is more than one driver, for eg tristates and bidirectionals
+3.Which logic set inteded for modeling at higher-abstraction level?
+- 2-state logic
+4. What is issue with this set in RTL code?
+- 2-state logic initialize to 0 , so hides initialization problem in RTL
+- ASsigning 4-state to 2-state variable convert X & Z value to 0
+5. Which declaration allow more control over timing?
+- timeunit and timeprecision
