@@ -137,12 +137,30 @@ module testmodule
  initial
  begin
   #20ns sel =  0;
-  #5.18ns sel = 1;		// here rounded to 5.2ns
+  #5.18ns sel = 1;		// here rounded to 5.2ns as precision is 100ps = 0.1 ns
   bvar = #1step cvar		// blocking assigin using 1step
  end
  
 always @(posedge clk)
  #5.1ns avar <= avar + 1;     // Non-blocking assign
 
+endmodule
+```
+## Timeunit and timeprecision
+- Replace the `timescale directive = equivalent but without file order compilation dependency
+- Are declaration, not directives
+- Places inside module, must be 1st statement of module
+- Only visible in the design element where they are declared and any nested units
+
+```
+module testbench
+ timunit 1ns;
+ timeprecision 100ps;			// Can be declared as timeunit 1ns/100ps
+ logic status
+ 
+ initial begin
+  #10ns status = 1'b1;
+  #10   status = 1'b0;
+ end
 endmodule
 ```
