@@ -134,7 +134,7 @@ endcase
 
 priority case(1'b1)
  en_a : op = a;
- en_b : op = b;			// Runtimme Warning if one enable is not active
+ en_b : op = b;			// Runtimme warning if one enable is not active
  en_c : op = c; 
 endcase
 
@@ -144,5 +144,31 @@ priority casez (pri)
  3'b001 : op = c;
 endcase
 ```
+## Systemverilog unique case
+- Modifier to case statement
+- Equivalent to the full_case and parallel_case attribute for sythesis
+- Behavior checked in simulation
+- Define `case` branches as complete and mutually exclusive, one branch must be executed, `Runtime warning` if no branch found for a case value, NO OVERLAPPING allowed, 
+- ** Runtime warning if multiple branches found for a case value ** 
+- Same applied to casex, casez : Beware more likely to be overlapping
 
+```
+priority case (fullc)
+ 0:       op = a;
+ 0,1,2:   op = b;		//Runtime warning when fullc = 0 
+ 3:       op = c;
+endcase
+
+priority case(1'b1)
+ en_a : op = a;
+ en_b : op = b;			// Runtimme warning if multiple enables active
+ en_c : op = c; 
+endcase
+
+priority casez (pri)
+ 3'b1?? : op = a;
+ 3'b?1? : op = b;		//Runtime warning more than 1 bit = 1 or none of bits = 1
+ 3'b??1 : op = c;
+endcase
+```
 
