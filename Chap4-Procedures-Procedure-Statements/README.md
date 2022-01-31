@@ -116,3 +116,33 @@ endcase
 ```
 * casex take into account `Z and X and ?` for the bit position that should not participate in match
 * casez take into account `Z and ?` for the bit position that should not participate in match
+* The attribute tell the synthesis tool to not infer the latch logic
+
+## Systemverilog priority case
+- Modifier to case statement
+- Equivalent to the full_case attribute for sythesis
+- Behavior checked in simulation
+- Define `case` branches as complete and prioritized, one branch must be executed, `Runtime warning` if no branch found for a case value, overlapping branches are permitted
+- Same applied to casex, casez
+
+```
+priority case (fullc)
+ 0:       op = a;
+ 0,1,2:   op = b;
+ 3:       op = c;
+endcase
+
+priority case(1'b1)
+ en_a : op = a;
+ en_b : op = b;			// Runtimme Warning if one enable is not active
+ en_c : op = c; 
+endcase
+
+priority casez (pri)
+ 3'b1?? : op = a;
+ 3'b01? : op = b;		//Runtime warning if pri = 0 or pri = X
+ 3'b001 : op = c;
+endcase
+```
+
+
